@@ -8,7 +8,7 @@ npm install -g t0d0
 
 The only hard dependency of t0d0 is "[The Silver Searcher](https://github.com/ggreer/the_silver_searcher)" (`ag`).
 
-For OSX+brew users it will be:
+For OSX+brew `ag` can be installed with:
 ```
 brew install ag
 ```
@@ -47,7 +47,7 @@ npm run-script autotest
 
 ## Roadmap
 
-See t0d0's [kanban board](https://huboard.com/kossnocorp/t0d0) on HuBoard.
+See [t0d0's kanban board](https://huboard.com/kossnocorp/t0d0) on HuBoard.
 
 --
 
