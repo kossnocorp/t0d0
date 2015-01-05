@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var trim = require('string-fns/src/trim');
 var pad = require('string-fns/src/pad');
 var path = require('path');
