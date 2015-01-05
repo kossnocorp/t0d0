@@ -1,0 +1,20 @@
+{
+  "name": "t0d0",
+  "version": "0.1.0",
+  "author": "Sasha Koss <kossnocorp@gmail.com>",
+  "description": "Grep TODOs",
+  "repository": "https://github.com/kossnocorp/t0d0",
+  "engine": {
+    "node": ">= 0.10"
+  },
+  "bin": {
+    "todo": "./bin/t0d0.js"
+  },
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "commander": "^2.6.0",
+    "date-fns": "^0.14.8",
+    "string-fns": "^0.1.0"
+  },
+  "devDependencies": {}
+}
