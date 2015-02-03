@@ -131,7 +131,7 @@ var filterReviewed = function(fullMap, options) {
     var todos = fullMap[filename];
     todos.forEach(function(todo) {
       if (todo.isReviewed) {
-        if (isBefore(todo.reviewedAt, addDays(today, 14))) {
+        if (isBefore(todo.reviewedAt, addDays(today, -14))) {
           // Ignore reviewed
           return;
         }
