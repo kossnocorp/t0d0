@@ -123,16 +123,21 @@ var getMap = function(output) {
 };
 
 var today = new Date();
-var filterReviewed = function(fullMap, options) {
+var filterTodos = function(fullMap, options) {
   if (options.all) return fullMap;
 
   var map = {};
   for (var filename in fullMap) {
     var todos = fullMap[filename];
     todos.forEach(function(todo) {
-      if (todo.isReviewed) {
-        if (isBefore(todo.reviewedAt, subDays(today, 14))) {
-          // Ignore reviewed
+      if (options.reviewed) {
+        if (!todo.isReviewed) {
+          // Ignore unreviewed
+          return;
+        }
+      } else if (todo.isReviewed) {
+        if (isBefore(subDays(today, 14), todo.reviewedAt)) {
+          // Ignore reviewed recently
           return;
         }
       }
@@ -155,6 +160,10 @@ program
     '--all',
     'show all TODOs, including reviewed (false)'
   )
+  .option(
+    '--reviewed',
+    'show only reviewed TODOs'
+  )
   .parse(process.argv);
 
 var agPrc = childProcess.spawn('ag', ['-Q', 'TODO:', '--ackmate']);
@@ -167,7 +176,7 @@ agPrc.stdout.on('data', function(data) {
       var fullMap = getMap(output);
 
 
-      var map = filterReviewed(fullMap, program);
+      var map = filterTodos(fullMap, program);
 
       renderResult(map, program);
 
