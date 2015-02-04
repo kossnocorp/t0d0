@@ -5,7 +5,7 @@ var pad = require('string-fns/src/pad');
 var path = require('path');
 var childProcess = require('child_process');
 var program = require('commander');
-var addDays = require('date-fns/src/add_days');
+var subDays = require('date-fns/src/sub_days');
 var isBefore = require('date-fns/src/is_before');
 var chalk = require('chalk');
 
@@ -131,7 +131,7 @@ var filterReviewed = function(fullMap, options) {
     var todos = fullMap[filename];
     todos.forEach(function(todo) {
       if (todo.isReviewed) {
-        if (isBefore(todo.reviewedAt, addDays(today, -14))) {
+        if (isBefore(todo.reviewedAt, subDays(today, 14))) {
           // Ignore reviewed
           return;
         }
