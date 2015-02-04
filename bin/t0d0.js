@@ -8,6 +8,7 @@ var program = require('commander');
 var subDays = require('date-fns/src/sub_days');
 var isBefore = require('date-fns/src/is_before');
 var chalk = require('chalk');
+var crypto = require('crypto');
 
 var getTodo = function(filename, line) {
   var captures = line.match(/^(\d+);(\d+)\s(\d+):(.+)$/);
@@ -15,6 +16,10 @@ var getTodo = function(filename, line) {
   var column = parseInt(captures[2]);
   var length = parseInt(captures[3]);
   var source = captures[4];
+  var hash = crypto
+    .createHash('sha1')
+    .update([filename, lineNumber, column, source].join(' '))
+    .digest('hex');
 
   var reviewedAt;
 
@@ -30,9 +35,15 @@ var getTodo = function(filename, line) {
     length: length,
     source: source,
     isReviewed: !!reviewedAt,
-    reviewedAt: reviewedAt
+    reviewedAt: reviewedAt,
+    hash: hash
   };
 };
+
+var getHashText = function(hash, isShort) {
+  // TODO: short option
+  return '      ' + chalk.yellow(isShort ? hash.substring(0, 7) : hash) + '\n';
+}
 
 var getLineText = function(line) {
   return chalk.blue(' ' + pad(line.toString(), 4, ' ') + '|');
@@ -45,17 +56,19 @@ var getTodoText = function(todo, options, cb) {
     "awk 'NR >= " +  ln + ' && NR <=' + (ln+numberOfLines) + "' " + todo.filename,
     function(err, output) {
       cb(
-        output.replace(/\s+$/, '').split(/\n/g).map(function(line, index) {
-          var lineText;
-          if (index == 0) {
-            lineText = line.replace('TODO:', chalk.red.bold('$&'))
+        [getHashText(todo.hash, options.short)].concat(
+          output.replace(/\s+$/, '').split(/\n/g).map(function(line, index) {
+            var lineText;
+            if (index == 0) {
+              lineText = line.replace('TODO:', chalk.red.bold('$&'))
 
-          } else {
-            lineText = line;
-          }
+            } else {
+              lineText = line;
+            }
 
-          return getLineText(ln+index) + lineText + '\n';
-        }).join('')
+            return getLineText(ln+index) + lineText + '\n';
+          })
+        ).join('')
       );
     }
   );
