@@ -16,7 +16,7 @@ var getTodo = function(filename, line) {
   var column = parseInt(captures[2]);
   var length = parseInt(captures[3]);
   var source = captures[4];
-  var hash = crypto
+  var id = crypto
     .createHash('sha1')
     .update([filename, lineNumber, column, source].join(' '))
     .digest('hex');
@@ -36,13 +36,12 @@ var getTodo = function(filename, line) {
     source: source,
     isReviewed: !!reviewedAt,
     reviewedAt: reviewedAt,
-    hash: hash
+    id: id
   };
 };
 
-var getHashText = function(hash, isShort) {
-  // TODO: short option
-  return '      ' + chalk.yellow(isShort ? hash.substring(0, 7) : hash) + '\n';
+var getIDText = function(id, isShort) {
+  return '      ' + chalk.yellow(isShort ? id.substring(0, 7) : id) + '\n';
 }
 
 var getLineText = function(line) {
@@ -56,7 +55,7 @@ var getTodoText = function(todo, options, cb) {
     "awk 'NR >= " +  ln + ' && NR <=' + (ln+numberOfLines) + "' " + todo.filename,
     function(err, output) {
       cb(
-        [getHashText(todo.hash, options.short)].concat(
+        [getIDText(todo.id, options.short)].concat(
           output.replace(/\s+$/, '').split(/\n/g).map(function(line, index) {
             var lineText;
             if (index == 0) {
@@ -115,6 +114,10 @@ var renderStats = function(stats, options) {
   console.log('  All TODOs:      ' + stats.all);
   console.log('  Reviewed TODOs: ' + stats.reviewed);
   // TODO: use stats.files for statistics per file
+}
+
+var runEditor = function(todo, option) {
+  var vimPrc = childProcess.spawn('vim', [todo.filename, '+' + todo.lineNumber], {stdio: 'inherit'});
 }
 
 var getMap = function(output) {
@@ -192,6 +195,24 @@ var countTodos = function(fullMap, options) {
   return stats;
 }
 
+var findTodoByID = function(fullMap, id, options) {
+  var result;
+  for (var filename in fullMap) {
+    fullMap[filename].some(function(todo) {
+      if (todo.id.indexOf(id) == 0) {
+        result = todo;
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (result) {
+      return result;
+    }
+  }
+}
+
 program
   .usage('[options]')
   .option(
@@ -207,8 +228,16 @@ program
     'show only reviewed TODOs'
   )
   .option(
+    '--short',
+    'show abbreviated TODO IDs'
+  )
+  .option(
     '--stats',
     'display number of TODOs and how many of them are reviewed'
+  )
+  .option(
+    '--edit [id]',
+    'open Vim to edit TODO'
   )
   .parse(process.argv);
 
@@ -224,6 +253,9 @@ agPrc.stdout.on('data', function(data) {
       if (program.stats) {
         var stats = countTodos(fullMap, program);
         renderStats(stats, program);
+      } else if (program.edit) {
+        var todo = findTodoByID(fullMap, program.edit, program);
+        runEditor(todo, program);
       } else {
         var map = filterTodos(fullMap, program);
         renderResult(map, program);
