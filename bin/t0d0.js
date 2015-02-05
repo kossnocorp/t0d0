@@ -111,6 +111,12 @@ var renderResult = function(map, options) {
   });
 }
 
+var renderStats = function(stats, options) {
+  console.log('  All TODOs:      ' + stats.all);
+  console.log('  Reviewed TODOs: ' + stats.reviewed);
+  // TODO: use stats.files for statistics per file
+}
+
 var getMap = function(output) {
   var map = {};
 
@@ -163,6 +169,29 @@ var filterTodos = function(fullMap, options) {
   return map;
 };
 
+var countTodos = function(fullMap, options) {
+  var stats = {};
+  stats.all = 0;
+  stats.reviewed = 0;
+  stats.files = {};
+
+  for (var filename in fullMap) {
+    var todos = fullMap[filename];
+    var fileStats = {
+      all: todos.length,
+      reviewed: todos.filter(function(todo) {
+        return todo.isReviewed;
+      }).length
+    }
+
+    stats.all += fileStats.all;
+    stats.reviewed += fileStats.reviewed;
+    stats.files[filename] = fileStats;
+  }
+
+  return stats;
+}
+
 program
   .usage('[options]')
   .option(
@@ -177,6 +206,10 @@ program
     '--reviewed',
     'show only reviewed TODOs'
   )
+  .option(
+    '--stats',
+    'display number of TODOs and how many of them are reviewed'
+  )
   .parse(process.argv);
 
 var agPrc = childProcess.spawn('ag', ['-Q', 'TODO:', '--ackmate']);
@@ -188,10 +221,13 @@ agPrc.stdout.on('data', function(data) {
       var output = trim(data).split(/\n/g);
       var fullMap = getMap(output);
 
-
-      var map = filterTodos(fullMap, program);
-
-      renderResult(map, program);
+      if (program.stats) {
+        var stats = countTodos(fullMap, program);
+        renderStats(stats, program);
+      } else {
+        var map = filterTodos(fullMap, program);
+        renderResult(map, program);
+      }
 
     } else {
       console.error(
