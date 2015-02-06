@@ -136,7 +136,7 @@ var filterTodos = function(fullMap, options) {
           return;
         }
       } else if (todo.isReviewed) {
-        if (isBefore(subDays(today, 14), todo.reviewedAt)) {
+        if (isBefore(subDays(today, options.days || 14), todo.reviewedAt)) {
           // Ignore reviewed recently
           return;
         }
@@ -155,6 +155,10 @@ program
   .option(
     '-l, --lines <number>',
     'number of lines including TODO statement (default - 3)'
+  )
+  .option(
+    '-d, --days <number>',
+    'days since review is considered obsolete'
   )
   .option(
     '--all',
