@@ -26,7 +26,7 @@ var getTodo = function(filename, line) {
 
   var tagCaptures = source.match(/TODO:\s\((.+)\)/);
   if (tagCaptures) {
-    var tagCapturesArray = tagCaptures[1].split(/[;, ]+/);
+    var tagCapturesArray = tagCaptures[1].split(/[;,]+/);
     tagCapturesArray.forEach(function(token) {
       var result;
       if (result = token.match(/#([a-zA-Z\-_]+)/)) {
