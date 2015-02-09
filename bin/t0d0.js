@@ -7,6 +7,7 @@ var childProcess = require('child_process');
 var program = require('commander');
 var subDays = require('date-fns/src/sub_days');
 var isBefore = require('date-fns/src/is_before');
+var parseDate = require('date-fns/src/parse')
 var chalk = require('chalk');
 var crypto = require('crypto');
 
@@ -22,19 +23,17 @@ var getTodo = function(filename, line) {
     .digest('hex');
 
   var tags = [];
-  var reviewedAt;
-
-  var tagCaptures = source.match(/TODO:\s\((.+)\)/);
+  var tagCaptures = source.match(/(?:#)([^#]+)(?=[\s.,:,]|$)/g);
   if (tagCaptures) {
-    var tagCapturesArray = tagCaptures[1].split(/[;,]+/);
-    tagCapturesArray.forEach(function(token) {
-      var result;
-      if (result = token.match(/#([a-zA-Z\-_]+)/)) {
-        tags.push(result[1]);
-      } else {
-        reviewedAt = new Date(token);
-      }
+    tags = tagCaptures.map(function(tag) {
+      return tag.replace('#', '')
     });
+  }
+
+  var reviewedAt;
+  var reviewedCaptures = source.match(/(?:@)([^@]+)(?=[\s.,:,]|$)/);
+  if (reviewedCaptures) {
+    reviewedAt = parseDate(reviewedCaptures[1]);
   }
 
   return {
