@@ -16,11 +16,20 @@ var getTodo = function(filename, line) {
   var length = parseInt(captures[3]);
   var source = captures[4];
 
+  var tags = [];
   var reviewedAt;
 
-  var reviewedCaptures = source.match(/TODO:\s\((.+)\)/);
-  if (reviewedCaptures) {
-    reviewedAt = new Date(reviewedCaptures[1]);
+  var tagCaptures = source.match(/TODO:\s\((.+)\)/);
+  if (tagCaptures) {
+    var tagCapturesArray = tagCaptures[1].split(/[;, ]+/);
+    tagCapturesArray.forEach(function(token) {
+      var result;
+      if (result = token.match(/#([a-zA-Z\-_]+)/)) {
+        tags.push(result[1]);
+      } else {
+        reviewedAt = new Date(token);
+      }
+    });
   }
 
   return {
@@ -29,6 +38,7 @@ var getTodo = function(filename, line) {
     column: column,
     length: length,
     source: source,
+    tags: tags,
     isReviewed: !!reviewedAt,
     reviewedAt: reviewedAt
   };
@@ -135,6 +145,21 @@ var filterTodos = function(fullMap, options) {
           // Ignore unreviewed
           return;
         }
+      } else if (options.tagged) {
+        if (todo.tags.length == 0) {
+          // Ignore untagged
+          return;
+        }
+      } else if (options.untagged) {
+        if (todo.tags.length > 0) {
+          // Ignore tagged
+          return;
+        }
+      } else if (options.tag) {
+        if (todo.tags.indexOf(options.tag.replace('#', '')) == -1) {
+          // Ignore TODOs if it doesn't contain specific tag
+          return;
+        }
       } else if (todo.isReviewed) {
         if (isBefore(subDays(today, 14), todo.reviewedAt)) {
           // Ignore reviewed recently
@@ -163,6 +188,18 @@ program
   .option(
     '--reviewed',
     'show only reviewed TODOs'
+  )
+  .option(
+    '--tag <value>',
+    'filter TODOs by tag'
+  )
+  .option(
+    '--tagged',
+    'show only tagged TODOs'
+  )
+  .option(
+    '--untagged',
+    'show only untagged TODOs'
   )
   .parse(process.argv);
 
