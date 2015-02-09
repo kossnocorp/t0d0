@@ -1,6 +1,6 @@
 {
   "name": "t0d0",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Sasha Koss <kossnocorp@gmail.com>",
   "description": "Grep TODOs",
   "repository": "https://github.com/kossnocorp/t0d0",
