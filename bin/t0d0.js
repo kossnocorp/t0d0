@@ -102,7 +102,7 @@ var renderFiles = function(files, map, options, cb) {
     var filename = files[0];
     var todos = map[filename];
 
-    console.log(chalk.grey.bold(filename) + ' (' + todos.length  + ')\n');
+    console.log(chalk.green.bold(filename) + ' (' + todos.length  + ')\n');
 
     renderTodos(todos, options, function(text) {
       renderFiles(files.slice(1), map, options, cb);
