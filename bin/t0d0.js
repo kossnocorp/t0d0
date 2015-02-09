@@ -21,11 +21,20 @@ var getTodo = function(filename, line) {
     .update([filename, lineNumber, column, source].join(' '))
     .digest('hex');
 
+  var tags = [];
   var reviewedAt;
 
-  var reviewedCaptures = source.match(/TODO:\s\((.+)\)/);
-  if (reviewedCaptures) {
-    reviewedAt = new Date(reviewedCaptures[1]);
+  var tagCaptures = source.match(/TODO:\s\((.+)\)/);
+  if (tagCaptures) {
+    var tagCapturesArray = tagCaptures[1].split(/[;, ]+/);
+    tagCapturesArray.forEach(function(token) {
+      var result;
+      if (result = token.match(/#([a-zA-Z\-_]+)/)) {
+        tags.push(result[1]);
+      } else {
+        reviewedAt = new Date(token);
+      }
+    });
   }
 
   return {
@@ -34,6 +43,7 @@ var getTodo = function(filename, line) {
     column: column,
     length: length,
     source: source,
+    tags: tags,
     isReviewed: !!reviewedAt,
     reviewedAt: reviewedAt,
     id: id
@@ -157,8 +167,23 @@ var filterTodos = function(fullMap, options) {
           // Ignore unreviewed
           return;
         }
+      } else if (options.tagged) {
+        if (todo.tags.length == 0) {
+          // Ignore untagged
+          return;
+        }
+      } else if (options.untagged) {
+        if (todo.tags.length > 0) {
+          // Ignore tagged
+          return;
+        }
+      } else if (options.tag) {
+        if (todo.tags.indexOf(options.tag.replace('#', '')) == -1) {
+          // Ignore TODOs if it doesn't contain specific tag
+          return;
+        }
       } else if (todo.isReviewed) {
-        if (isBefore(subDays(today, 14), todo.reviewedAt)) {
+        if (isBefore(subDays(today, options.days || 14), todo.reviewedAt)) {
           // Ignore reviewed recently
           return;
         }
@@ -220,6 +245,10 @@ program
     'number of lines including TODO statement (default - 3)'
   )
   .option(
+    '-d, --days <number>',
+    'days since review is considered obsolete'
+  )
+  .option(
     '--all',
     'show all TODOs, including reviewed (false)'
   )
@@ -238,6 +267,18 @@ program
   .option(
     '--edit [id]',
     'open Vim to edit TODO'
+  )
+  .option(
+    '--tag <value>',
+    'filter TODOs by tag'
+  )
+  .option(
+    '--tagged',
+    'show only tagged TODOs'
+  )
+  .option(
+    '--untagged',
+    'show only untagged TODOs'
   )
   .parse(process.argv);
 
