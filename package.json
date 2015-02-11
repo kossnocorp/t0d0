@@ -10,11 +10,18 @@
   "bin": {
     "todo": "./bin/t0d0.js"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha tests/*.js"
+  },
   "dependencies": {
     "chalk": "^0.5.1",
     "commander": "^2.6.0",
-    "date-fns": "^0.14.8",
+    "date-fns": "git://github.com/js-fns/date-fns",
     "string-fns": "^0.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "chai": "^1.10.0",
+    "sinon": "^1.12.2"
+  }
 }
