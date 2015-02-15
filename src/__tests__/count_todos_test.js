@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var countTodos = require('../src/count_todos');
+var countTodos = require('../count_todos');
 
 describe('countTodos', function() {
   it('counts reviewed and unreviewed todos', function() {

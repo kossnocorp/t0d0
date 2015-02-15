@@ -1,9 +1,12 @@
 var subDays = require('date-fns/src/sub_days');
 var isBefore = require('date-fns/src/is_before');
 
-var filterTodos = function(fullMap, options) {
+var filterTodos = function(fullMap, options, cb) {
   var today = new Date();
-  if (options.all) return fullMap;
+  if (options.all) {
+    cb(fullMap);
+    return;
+  }
 
   var map = {};
   for (var filename in fullMap) {
@@ -41,7 +44,7 @@ var filterTodos = function(fullMap, options) {
     });
   }
 
-  return map;
+  cb(map);
 };
 
 module.exports = filterTodos;

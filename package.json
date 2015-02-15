@@ -11,7 +11,8 @@
     "todo": "./bin/t0d0.js"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha tests/*.js"
+    "test": "./node_modules/.bin/mocha \"src/**/__tests__/*.js\" --require \"src/__tests__/_test_helper\" --recursive --reporter spec --timeout 10000",
+    "autotest": "npm test -- --watch"
   },
   "dependencies": {
     "chalk": "^0.5.1",
@@ -20,8 +21,10 @@
     "string-fns": "^0.1.0"
   },
   "devDependencies": {
-    "mocha": "^2.1.0",
     "chai": "^1.10.0",
-    "sinon": "^1.12.2"
+    "chai-shallow-deep-equal": "^1.1.0",
+    "mocha": "^2.1.0",
+    "sinon": "^1.12.2",
+    "sinon-chai": "^2.7.0"
   }
 }

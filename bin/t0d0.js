@@ -7,9 +7,11 @@ var getMap = require('../src/get_map');
 var filterTodos = require('../src/filter_todos');
 var countTodos = require('../src/count_todos');
 var findTodoByID = require('../src/find_todo_by_id');
+var blameTodos = require('../src/blame_todos');
 
 var trim = require('string-fns/src/trim');
 var childProcess = require('child_process');
+
 var program = require('commander');
 
 program
@@ -21,6 +23,10 @@ program
   .option(
     '-d, --days <number>',
     'days since review is considered obsolete'
+  )
+  .option(
+    '--blame',
+    'blame TODOs'
   )
   .option(
     '--all',
@@ -72,8 +78,11 @@ agPrc.stdout.on('data', function(data) {
         var todo = findTodoByID(fullMap, program.edit, program);
         runEditor(todo, program);
       } else {
-        var map = filterTodos(fullMap, program);
-        renderResult(map, program);
+        filterTodos(fullMap, program, function(map) {
+          blameTodos(map, program, function(map) {
+            renderResult(map, program);
+          });
+        });
       }
 
     } else {
