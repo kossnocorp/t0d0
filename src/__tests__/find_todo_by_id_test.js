@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var findTodoByID = require('../src/find_todo_by_id');
+var findTodoByID = require('../find_todo_by_id');
 var map = {
   'file1': [
     {id: '0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33', source: 'foo'},

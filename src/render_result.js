@@ -2,8 +2,16 @@ var pad = require('string-fns/src/pad');
 var childProcess = require('child_process');
 var chalk = require('chalk');
 
-var getIDText = function(id, isShort) {
-  return '      ' + chalk.yellow(isShort ? id.substring(0, 7) : id) + '\n';
+var getIDText = function(id, options) {
+  return '      ' + chalk.yellow(options.short ? id.substring(0, 7) : id) + '\n';
+}
+
+var getBlameText = function(commit, author, options) {
+  if (author) {
+    return '      commit ' + chalk.yellow(commit + ' ' + author) + '\n';
+  } else {
+    return '';
+  }
 }
 
 var getLineText = function(line) {
@@ -17,7 +25,7 @@ var getTodoText = function(todo, options, cb) {
     "awk 'NR >= " +  ln + ' && NR <=' + (ln+numberOfLines) + "' " + todo.filename,
     function(err, output) {
       cb(
-        [getIDText(todo.id, options.short)].concat(
+        [getIDText(todo.id, options) + getBlameText(todo.commit, todo.author)].concat(
           output.replace(/\s+$/, '').split(/\n/g).map(function(line, index) {
             var lineText;
             if (index == 0) {
