@@ -1,6 +1,6 @@
 var childProcess = require('child_process');
 
-var blameSingleTodo = function(todoIndex, filename, map, options, cb) {
+var blameSingleTodo = function(todoIndex, filename, map, options, callback) {
   var todo = map[filename][todoIndex];
   var ln = todo.lineNumber;
   var filename = todo.filename;
@@ -16,47 +16,47 @@ var blameSingleTodo = function(todoIndex, filename, map, options, cb) {
           map[filename][todoIndex]['author'] = authorCaptures[1];
         }
       }
-      cb(map);
+      callback(map);
     }
   );
 };
 
-var blameTodos = function(todoIndices, filename, map, options, cb) {
+var blameTodos = function(todoIndices, filename, map, options, callback) {
   if (todoIndices.length > 0) {
     var todoIndex = todoIndices[0];
 
     blameSingleTodo(todoIndex, filename, map, options, function(newMap) {
-      blameTodos(todoIndices.slice(1), filename, newMap, options, cb);
+      blameTodos(todoIndices.slice(1), filename, newMap, options, callback);
     });
 
   } else {
-    cb(map);
+    callback(map);
   }
 }
 
-var blameFiles = function(files, map, options, cb) {
+var blameFiles = function(files, map, options, callback) {
   if (files.length > 0) {
     var filename = files[0];
     var todoIndices = Object.keys(map[filename]);
 
     blameTodos(todoIndices, filename, map, options, function(newMap) {
-      blameFiles(files.slice(1), newMap, options, cb);
+      blameFiles(files.slice(1), newMap, options, callback);
     });
 
   } else {
-    cb(map, options);
+    callback(map, options);
   }
 
 }
 
-var blameResult = function(map, options, cb) {
+var blameResult = function(map, options, callback) {
   if (!options.blame) {
-    cb(map);
+    callback(map);
     return;
   }
 
   var files = Object.keys(map);
-  blameFiles(files, map, options, cb);
+  blameFiles(files, map, options, callback);
 }
 
 module.exports = blameResult;

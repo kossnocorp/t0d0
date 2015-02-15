@@ -1,10 +1,10 @@
 var subDays = require('date-fns/src/sub_days');
 var isBefore = require('date-fns/src/is_before');
 
-var filterTodos = function(fullMap, options, cb) {
+var filterTodos = function(fullMap, options, callback) {
   var today = new Date();
   if (options.all) {
-    cb(fullMap);
+    callback(fullMap);
     return;
   }
 
@@ -44,7 +44,7 @@ var filterTodos = function(fullMap, options, cb) {
     });
   }
 
-  cb(map);
+  callback(map);
 };
 
 module.exports = filterTodos;
