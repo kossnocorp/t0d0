@@ -73,10 +73,10 @@ var renderFiles = function(files, map, options, cb) {
   }
 }
 
-var renderResult = function(map, options) {
+var renderResult = function(map, options, cb) {
   var files = Object.keys(map);
   renderFiles(files, map, options, function() {
-    // TODO:
+    cb();
   });
 }
 
