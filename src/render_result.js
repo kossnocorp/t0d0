@@ -18,13 +18,13 @@ var getLineText = function(line) {
   return chalk.blue(' ' + pad(line.toString(), 4, ' ') + '|');
 }
 
-var getTodoText = function(todo, options, cb) {
+var getTodoText = function(todo, options, callback) {
   var ln = todo.lineNumber;
   var numberOfLines = (options.lines || 3)-1;
   childProcess.exec(
     "awk 'NR >= " +  ln + ' && NR <=' + (ln+numberOfLines) + "' " + todo.filename,
     function(err, output) {
-      cb(
+      callback(
         [getIDText(todo.id, options) + getBlameText(todo.commit, todo.author)].concat(
           output.replace(/\s+$/, '').split(/\n/g).map(function(line, index) {
             var lineText;
@@ -43,21 +43,21 @@ var getTodoText = function(todo, options, cb) {
   );
 }
 
-var renderTodos = function(todos, options, cb) {
+var renderTodos = function(todos, options, callback) {
   if (todos.length > 0) {
     var todo = todos[0];
 
     getTodoText(todo, options, function(text) {
       console.log(text);
-      renderTodos(todos.slice(1), options, cb);
+      renderTodos(todos.slice(1), options, callback);
     });
 
   } else {
-    cb();
+    callback();
   }
 }
 
-var renderFiles = function(files, map, options, cb) {
+var renderFiles = function(files, map, options, callback) {
   if (files.length > 0) {
     var filename = files[0];
     var todos = map[filename];
@@ -65,18 +65,18 @@ var renderFiles = function(files, map, options, cb) {
     console.log(chalk.green.bold(filename) + ' (' + todos.length  + ')\n');
 
     renderTodos(todos, options, function(text) {
-      renderFiles(files.slice(1), map, options, cb);
+      renderFiles(files.slice(1), map, options, callback);
     });
 
   } else {
-    cb();
+    callback();
   }
 }
 
-var renderResult = function(map, options, cb) {
+var renderResult = function(map, options, callback) {
   var files = Object.keys(map);
   renderFiles(files, map, options, function() {
-    cb();
+    callback(0);
   });
 }
 

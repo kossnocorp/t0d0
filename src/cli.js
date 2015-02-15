@@ -11,7 +11,7 @@ var Promise = require('bluebird');
 var trim = require('string-fns/src/trim');
 var childProcess = require('child_process');
 
-var runAg = function(program, cb) {
+var runAg = function(program, callback) {
   var agPrc = childProcess.spawn('ag', ['-Q', 'TODO:', '--ackmate']);
 
   agPrc.stdout.setEncoding('utf8');
@@ -23,19 +23,19 @@ var runAg = function(program, cb) {
 
         if (program.stats) {
           var stats = countTodos(fullMap, program);
-          renderStats(stats, program, function() {
-            cb(0);
+          renderStats(stats, program, function(exitCode) {
+            callback(exitCode);
           });
         } else if (program.edit) {
           var todo = findTodoByID(fullMap, program.edit, program);
           runEditor(todo, program, function(exitCode) {
-            cb(exitCode);
+            callback(exitCode);
           });
         } else {
           filterTodos(fullMap, program, function(map) {
             blameTodos(map, program, function(map) {
-              renderResult(map, program, function() {
-                cb(0);
+              renderResult(map, program, function(exitCode) {
+                callback(exitCode);
               });
             });
           });
@@ -45,7 +45,7 @@ var runAg = function(program, cb) {
         console.error(
           'ag process exited with code ' + code  + ", output: \n"  + data
         );
-        cb(1);
+        callback(1);
       }
     });
   });

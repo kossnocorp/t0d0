@@ -1,7 +1,7 @@
 var trim = require('string-fns/src/trim');
 var parseDate = require('date-fns/src/parse')
 var crypto = require('crypto');
-// TODO:
+
 var getTodo = function(filename, line) {
   var captures = line.match(/^(\d+);(\d+)\s(\d+):(.+)$/);
   var lineNumber = parseInt(captures[1]);
