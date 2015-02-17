@@ -9,7 +9,7 @@ var maxLength = function(obj) {
   return Object.keys(obj).reduce(function (a, b) {
     return a.length > b.length ? a : b;
   }).length;
-}
+};
 
 var getFilenameText = function(name, maxLength) {
   return name + repeat(' ', maxLength - name.length + 1);
@@ -42,25 +42,25 @@ var renderOverallStats = function(stats, options) {
     chalk.yellow('reviewed long time ago: '), stats.reviewedObsolete, ', ',
     chalk.red('unreviewed: '), unreviewed
   ].join(''));
-}
+};
 
 var renderTagStats = function(tags, options) {
   var tagLength = maxLength(tags);
 
   console.log();
-  console.log('  Tags:')
+  console.log('  Tags:');
   for (var tag in tags) {
     var stat = tags[tag];
-    console.log('  #' + getFilenameText(tag, tagLength) + '|' + pad(stat.toString(), 2, ' '))
-  };
-}
+    console.log('  #' + getFilenameText(tag, tagLength) + '|' + pad(stat.toString(), 2, ' '));
+  }
+};
 
 var renderStats = function(stats, options, callback) {
   renderFileStats(stats.files, options);
   renderOverallStats(stats, options);
-  if(Object.keys(stats.tags).length > 0) {
+  if (Object.keys(stats.tags).length > 0) {
     renderTagStats(stats.tags, options);
-  };
+  }
 
   // TODO:
   // TODO:

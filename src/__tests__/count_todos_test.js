@@ -21,7 +21,7 @@ describe('countTodos', function() {
         {isReviewed: false}
       ],
       'file2': [{isReviewed: true, reviewedAt: new Date(2014, 11, 30)}]
-    }
+    };
 
     expect(countTodos(map, {})).to.eql({
       all: 4,
