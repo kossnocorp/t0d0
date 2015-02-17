@@ -4,7 +4,7 @@ var program = require('commander');
 var cli = require('../src/cli');
 
 program
-  .usage('[options]')
+  .usage('[options] <files>')
   .option(
     '-l, --lines <number>',
     'number of lines including TODO statement (default - 3)'
@@ -57,7 +57,6 @@ program
     '--edit [id]',
     'open Vim to edit TODO'
   )
-
   .parse(process.argv);
 
 cli(program)

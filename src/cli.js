@@ -12,14 +12,14 @@ var trim = require('string-fns/src/trim');
 var childProcess = require('child_process');
 
 var runAg = function(program, callback) {
-  var agPrc = childProcess.spawn('ag', ['-Q', 'TODO:', '--ackmate']);
+  var agPrc = childProcess.spawn('ag', ['-Q', 'TODO:', '--ackmate'].concat(program.args));
 
   agPrc.stdout.setEncoding('utf8');
   agPrc.stdout.on('data', function(data) {
     agPrc.on('close', function(code) {
       if (code == 0) {
         var output = trim(data).split(/\n/g);
-        var fullMap = getMap(output);
+        var fullMap = getMap(output, program);
 
         if (program.stats) {
           var stats = countTodos(fullMap, program);

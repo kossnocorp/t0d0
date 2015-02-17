@@ -40,7 +40,7 @@ var getTodo = function(filename, line) {
   };
 };
 
-var getMap = function(output) {
+var getMap = function(output, options) {
   var map = {};
 
   output.reduce(function(lastFilename, line) {
@@ -49,12 +49,16 @@ var getMap = function(output) {
     if (isEmpty) {
       return null;
 
-    } else if (lastFilename == null) { // it's filename!
-      var filename = line.slice(1);
+    } else if (lastFilename == null) {
+      if (/^:/.test(line)) { // it's a filename!
+        var filename = line.slice(1);
+        map[filename] = [];
+      } else { // it's a line of only file
+        var filename = options.args[0];
+        map[filename] = [getTodo(filename, line)];
+      }
 
-      map[filename] = [];
       return filename;
-
     } else { // it's line!
       map[lastFilename].push(getTodo(lastFilename, line));
       return lastFilename;

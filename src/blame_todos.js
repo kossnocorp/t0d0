@@ -48,7 +48,7 @@ var blameFiles = function(files, map, options, callback) {
 
 };
 
-var blameResult = function(map, options, callback) {
+var blameMap = function(map, options, callback) {
   if (!options.blame) {
     callback(map);
     return;
@@ -58,4 +58,4 @@ var blameResult = function(map, options, callback) {
   blameFiles(files, map, options, callback);
 };
 
-module.exports = blameResult;
+module.exports = blameMap;
