@@ -50,11 +50,13 @@ var getMap = function(output, options) {
       return null;
 
     } else if (lastFilename == null) {
+      var filename;
+
       if (/^:/.test(line)) { // it's a filename!
-        var filename = line.slice(1);
+        filename = line.slice(1);
         map[filename] = [];
       } else { // it's a line of only file
-        var filename = options.args[0];
+        filename = options.args[0];
         map[filename] = [getTodo(filename, line)];
       }
 
