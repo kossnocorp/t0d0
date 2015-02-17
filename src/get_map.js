@@ -1,5 +1,5 @@
 var trim = require('string-fns/src/trim');
-var parseDate = require('date-fns/src/parse')
+var parseDate = require('date-fns/src/parse');
 var crypto = require('crypto');
 
 var getTodo = function(filename, line) {
@@ -17,7 +17,7 @@ var getTodo = function(filename, line) {
   var tagCaptures = source.match(/(?:#)([^#]+)(?=[\s.,:,]|$)/g);
   if (tagCaptures) {
     tags = tagCaptures.map(function(tag) {
-      return tag.replace('#', '')
+      return tag.replace('#', '');
     });
   }
 

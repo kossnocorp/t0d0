@@ -4,7 +4,7 @@ var chalk = require('chalk');
 
 var getIDText = function(id, options) {
   return '      ' + chalk.yellow(options.short ? id.substring(0, 7) : id) + '\n';
-}
+};
 
 var getBlameText = function(commit, author, options) {
   if (author) {
@@ -12,11 +12,11 @@ var getBlameText = function(commit, author, options) {
   } else {
     return '';
   }
-}
+};
 
 var getLineText = function(line) {
   return chalk.blue(' ' + pad(line.toString(), 4, ' ') + '|');
-}
+};
 
 var getTodoText = function(todo, options, callback) {
   var ln = todo.lineNumber;
@@ -29,8 +29,7 @@ var getTodoText = function(todo, options, callback) {
           output.replace(/\s+$/, '').split(/\n/g).map(function(line, index) {
             var lineText;
             if (index == 0) {
-              lineText = line.replace('TODO:', chalk.red.bold('$&'))
-
+              lineText = line.replace('TODO:', chalk.red.bold('$&'));
             } else {
               lineText = line;
             }
@@ -41,7 +40,7 @@ var getTodoText = function(todo, options, callback) {
       );
     }
   );
-}
+};
 
 var renderTodos = function(todos, options, callback) {
   if (todos.length > 0) {
@@ -55,7 +54,7 @@ var renderTodos = function(todos, options, callback) {
   } else {
     callback();
   }
-}
+};
 
 var renderFiles = function(files, map, options, callback) {
   if (files.length > 0) {
@@ -71,13 +70,13 @@ var renderFiles = function(files, map, options, callback) {
   } else {
     callback();
   }
-}
+};
 
 var renderResult = function(map, options, callback) {
   var files = Object.keys(map);
   renderFiles(files, map, options, function() {
     callback(0);
   });
-}
+};
 
 module.exports = renderResult;

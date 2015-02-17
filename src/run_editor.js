@@ -5,6 +5,6 @@ var runEditor = function(todo, option, callback) {
   vimPrc.on('close', function(code) {
     callback(code);
   });
-}
+};
 
 module.exports = runEditor;

@@ -49,14 +49,14 @@ var runAg = function(program, callback) {
       }
     });
   });
-}
+};
 
 
 var cli = function(program, callback) {
   return new Promise(function(resolve) {
     runAg(program, function(exitCode) {
       resolve(exitCode);
-    })
+    });
   });
 };
 

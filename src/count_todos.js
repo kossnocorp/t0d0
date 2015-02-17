@@ -1,10 +1,16 @@
-var subDays = require('date-fns/src/sub_days');
-var isBefore = require('date-fns/src/is_before');
+var isReviewedRecentlyWithOptions = require('./is_reviewed_recently');
 
 var countTodos = function(fullMap, options) {
   var today = new Date();
-  var reviewedBoundary = subDays(today, options.days || 14);
   var stats = {};
+
+  var isReviewedRecently = function(todo) {
+    return isReviewedRecentlyWithOptions(todo, options);
+  };
+
+  var isReviewedObsolete = function(todo) {
+    return todo.isReviewed && !isReviewedRecentlyWithOptions(todo, options);
+  };
 
   stats.all = 0;
   stats.reviewed = 0;
@@ -16,19 +22,17 @@ var countTodos = function(fullMap, options) {
     var todos = fullMap[filename];
     var fileStats = {
       all: todos.length,
-      reviewed: todos.filter(function(todo) {
-        return todo.isReviewed && isBefore(reviewedBoundary, todo.reviewedAt);
-      }).length,
-      reviewedObsolete: todos.filter(function(todo) {
-        return todo.isReviewed && !isBefore(reviewedBoundary, todo.reviewedAt);
-      }).length
-    }
+      reviewed: todos.filter(isReviewedRecently).length,
+      reviewedObsolete: todos.filter(isReviewedObsolete).length
+    };
 
     fullMap[filename].forEach(function(todo) {
-      todo.tags && todo.tags.forEach(function(tag) {
-        var tagStat = stats.tags[tag];
-        stats.tags[tag] = tagStat ? tagStat + 1 : 1;
-      });
+      if (todo.tags) {
+        todo.tags.forEach(function(tag) {
+          var tagStat = stats.tags[tag];
+          stats.tags[tag] = tagStat ? tagStat + 1 : 1;
+        });
+      }
     });
 
     stats.all += fileStats.all;
@@ -38,6 +42,6 @@ var countTodos = function(fullMap, options) {
   }
 
   return stats;
-}
+};
 
 module.exports = countTodos;
