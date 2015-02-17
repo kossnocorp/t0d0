@@ -1,5 +1,4 @@
-var subDays = require('date-fns/src/sub_days');
-var isBefore = require('date-fns/src/is_before');
+var isReviewedRecently = require('./is_reviewed_recently');
 
 var filterTodos = function(fullMap, options, callback) {
   var today = new Date();
@@ -29,11 +28,9 @@ var filterTodos = function(fullMap, options, callback) {
         // Ignore TODOs if it doesn't contain specific tag
         return;
       }
-    } else if (todo.isReviewed) {
-      if (isBefore(subDays(today, options.days || 14), todo.reviewedAt)) {
-        // Ignore reviewed recently
-        return;
-      }
+    } else if (isReviewedRecently(todo, options)) {
+      // Ignore reviewed recently
+      return;
     }
 
     map[filename] = map[filename] || [];

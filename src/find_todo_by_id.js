@@ -1,5 +1,3 @@
-
-
 var findTodoByID = function(fullMap, id, options) {
   var result;
 

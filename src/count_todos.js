@@ -1,17 +1,15 @@
-var subDays = require('date-fns/src/sub_days');
-var isBefore = require('date-fns/src/is_before');
+var isReviewedRecentlyWithOptions = require('./is_reviewed_recently');
 
 var countTodos = function(fullMap, options) {
   var today = new Date();
-  var reviewedBoundary = subDays(today, options.days || 14);
   var stats = {};
 
   var isReviewedRecently = function(todo) {
-    return todo.isReviewed && isBefore(reviewedBoundary, todo.reviewedAt);
+    return isReviewedRecentlyWithOptions(todo, options);
   };
 
   var isReviewedObsolete = function(todo) {
-    return todo.isReviewed && !isBefore(reviewedBoundary, todo.reviewedAt);
+    return todo.isReviewed && !isReviewedRecentlyWithOptions(todo, options);
   };
 
   stats.all = 0;

@@ -10,8 +10,16 @@ program
     'number of lines including TODO statement (default - 3)'
   )
   .option(
+    '--since <date>',
+    'don\'t show reviews reviewed after date'
+  )
+  .option(
+    '--until <date>',
+    'show reviewed TODOs after date'
+  )
+  .option(
     '-d, --days <number>',
-    'days since review is considered obsolete'
+    'same as --since N.days.ago'
   )
   .option(
     '--blame',
@@ -19,23 +27,11 @@ program
   )
   .option(
     '--all',
-    'show all TODOs, including reviewed (false)'
+    'show all TODOs, including reviewed'
   )
   .option(
     '--reviewed',
     'show only reviewed TODOs'
-  )
-  .option(
-    '--short',
-    'show abbreviated TODO IDs'
-  )
-  .option(
-    '--stats',
-    'display number of TODOs and how many of them are reviewed'
-  )
-  .option(
-    '--edit [id]',
-    'open Vim to edit TODO'
   )
   .option(
     '--tag <value>',
@@ -49,6 +45,19 @@ program
     '--untagged',
     'show only untagged TODOs'
   )
+  .option(
+    '--short',
+    'show abbreviated TODO IDs'
+  )
+  .option(
+    '--stats',
+    'display number of TODOs and how many of them are reviewed'
+  )
+  .option(
+    '--edit [id]',
+    'open Vim to edit TODO'
+  )
+
   .parse(process.argv);
 
 cli(program)
