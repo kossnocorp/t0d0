@@ -61,11 +61,6 @@ var renderStats = function(stats, options, callback) {
   if (Object.keys(stats.tags).length > 0) {
     renderTagStats(stats.tags, options);
   }
-
-  // TODO:
-  // TODO:
-  // TODO: @2015-02-15
-  // TODO: @2012 use stats.files for statistics per file
   callback(0);
 };
 
