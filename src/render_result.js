@@ -73,10 +73,14 @@ var renderFiles = function(files, map, options, callback) {
 };
 
 var renderResult = function(map, options, callback) {
-  var files = Object.keys(map);
-  renderFiles(files, map, options, function() {
-    callback(0);
-  });
+  if (!options.test) {
+    var files = Object.keys(map);
+    renderFiles(files, map, options, function() {
+      callback(0);
+    });
+  } else {
+    callback(map);
+  }
 };
 
 module.exports = renderResult;

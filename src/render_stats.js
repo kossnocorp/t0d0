@@ -56,12 +56,16 @@ var renderTagStats = function(tags, options) {
 };
 
 var renderStats = function(stats, options, callback) {
-  renderFileStats(stats.files, options);
-  renderOverallStats(stats, options);
-  if (Object.keys(stats.tags).length > 0) {
-    renderTagStats(stats.tags, options);
+  if (!options.test) {
+    renderFileStats(stats.files, options);
+    renderOverallStats(stats, options);
+    if (Object.keys(stats.tags).length > 0) {
+      renderTagStats(stats.tags, options);
+    }
+    callback(0);
+  } else {
+    callback(stats);
   }
-  callback(0);
 };
 
 module.exports = renderStats;

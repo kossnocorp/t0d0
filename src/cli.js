@@ -17,12 +17,12 @@ var runAg = function(options) {
   if (options.ack) {
     prc = childProcess.spawn(
       'ack',
-      ['--nocolor', '--heading', '--break', '--column', '-HQ', 'TODO:'].concat(options.args)
+      ['--nocolor', '--heading', '--break', '--column', '-HQ', 'TODO:'].concat(options.args || [])
     );
   } else {
     prc = childProcess.spawn(
       'ag',
-      ['-HQ', 'TODO:', '--ackmate'].concat(options.args)
+      ['-HQ', 'TODO:', '--ackmate'].concat(options.args || [])
     );
   }
 
@@ -70,7 +70,7 @@ var runCli = function(program, callback) {
 };
 
 
-var cli = function(program, callback) {
+var cli = function(program) {
   return new Promise(function(resolve) {
     runCli(program, function(exitCode) {
       resolve(exitCode);

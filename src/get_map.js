@@ -6,7 +6,7 @@ var getTodo = function(filename, line, options) {
   var captureToken = options.ack ? /^(\d+):(\d+)():(.+)$/
                                  : /^(\d+);(\d+)\s(\d+):(.+)$/;
 
-  var captures = line.match(captureToken);
+  var captures = line.replace('\0', '').match(captureToken);
   var lineNumber = parseInt(captures[1]);
   var column = parseInt(captures[2]);
   var length = parseInt(captures[3]);
@@ -22,7 +22,7 @@ var getTodo = function(filename, line, options) {
     .digest('hex');
 
   var tags = [];
-  var tagCaptures = source.match(/(?:#)([^#]+)(?=[\s.,:,]|$)/g);
+  var tagCaptures = source.match(/(?:#)([^#\s.,:]+)(?=[\s.,:]|$)/g);
   if (tagCaptures) {
     tags = tagCaptures.map(function(tag) {
       return tag.replace('#', '');
@@ -30,7 +30,7 @@ var getTodo = function(filename, line, options) {
   }
 
   var reviewedAt;
-  var reviewedCaptures = source.match(/(?:@)([^@]+)(?=[\s.,:,]|$)/);
+  var reviewedCaptures = source.match(/(?:@)([^@\s.,:]+)(?=[\s.,:]|$)/);
   if (reviewedCaptures) {
     reviewedAt = parseDate(reviewedCaptures[1]);
   }
