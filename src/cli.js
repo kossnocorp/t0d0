@@ -11,8 +11,26 @@ var Promise = require('bluebird');
 var trim = require('string-fns/src/trim');
 var childProcess = require('child_process');
 
-var runAg = function(program, callback) {
-  var agPrc = childProcess.spawn('ag', ['-Q', 'TODO:', '--ackmate'].concat(program.args));
+var runAg = function(options) {
+  var prc;
+
+  if (options.ack) {
+    prc = childProcess.spawn(
+      'ack',
+      ['--nocolor', '--heading', '--break', '--column', '-HQ', 'TODO:'].concat(options.args)
+    );
+  } else {
+    prc = childProcess.spawn(
+      'ag',
+      ['-HQ', 'TODO:', '--ackmate'].concat(options.args)
+    );
+  }
+
+  return prc;
+}
+
+var runCli = function(program, callback) {
+  var agPrc = runAg(program);
 
   agPrc.stdout.setEncoding('utf8');
   agPrc.stdout.on('data', function(data) {
@@ -54,7 +72,7 @@ var runAg = function(program, callback) {
 
 var cli = function(program, callback) {
   return new Promise(function(resolve) {
-    runAg(program, function(exitCode) {
+    runCli(program, function(exitCode) {
       resolve(exitCode);
     });
   });
