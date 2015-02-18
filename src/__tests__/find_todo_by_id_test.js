@@ -1,4 +1,3 @@
-var expect = require('chai').expect;
 var findTodoByID = require('../find_todo_by_id');
 var map = {
   'file1': [

@@ -1,6 +1,4 @@
-var expect = require('chai').expect;
 var filterTodos = require('../filter_todos');
-var sinon = require('sinon');
 var map = {
   'file1': [
     {
@@ -176,7 +174,32 @@ describe('filterTodos', function() {
     });
   });
 
-  context('--days', function() {
-    it.skip('specify review range');
+  context('--since, --until', function() {
+    it('specify review range', function(done) {
+      filterTodos(map, {since: '30.days.ago', until: '7 days ago'}, function(result) {
+        expect(result).to.eql({
+          'file1': [
+            {
+              isReviewed: true,
+              reviewedAt: new Date(2014, 11, 30),
+              tags: ['tag1', 'tag2']
+            },
+            {
+              isReviewed: false,
+              tags: ['tag2']
+            }
+          ],
+          'file2': [
+            {
+              isReviewed: true,
+              reviewedAt: new Date(2014, 10, 15),
+              tags: ['tag1']
+            }
+          ]
+        });
+
+        done();
+      });
+    });
   });
 });

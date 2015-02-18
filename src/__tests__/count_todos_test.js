@@ -1,6 +1,4 @@
-var expect = require('chai').expect;
 var countTodos = require('../count_todos');
-var sinon = require('sinon');
 
 describe('countTodos', function() {
   beforeEach(function() {

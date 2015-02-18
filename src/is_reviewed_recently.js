@@ -39,7 +39,7 @@ var isReviewedRecently = function(todo, options) {
     return false;
   }
   var today = new Date();
-  var sinceDate = options.since ? parseDateOption(option.since, today) : subDays(today, options.days || 14);
+  var sinceDate = options.since ? parseDateOption(options.since, today) : subDays(today, options.days || 14);
   var untilDate = options.until ? parseDateOption(options.until, today) : today;
   return isWithinRange(todo.reviewedAt, sinceDate, untilDate);
 };
