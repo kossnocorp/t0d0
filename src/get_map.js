@@ -2,12 +2,20 @@ var trim = require('string-fns/src/trim');
 var parseDate = require('date-fns/src/parse');
 var crypto = require('crypto');
 
-var getTodo = function(filename, line) {
-  var captures = line.match(/^(\d+);(\d+)\s(\d+):(.+)$/);
+var getTodo = function(filename, line, options) {
+  var captureToken = options.ack ? /^(\d+):(\d+)():(.+)$/
+                                 : /^(\d+);(\d+)\s(\d+):(.+)$/;
+
+  var captures = line.match(captureToken);
   var lineNumber = parseInt(captures[1]);
   var column = parseInt(captures[2]);
   var length = parseInt(captures[3]);
   var source = captures[4];
+
+  if (options.ack) {
+    column = column - 1;
+  }
+
   var id = crypto
     .createHash('sha1')
     .update([filename, lineNumber, column, source].join(' '))
@@ -48,21 +56,12 @@ var getMap = function(output, options) {
 
     if (isEmpty) {
       return null;
-
-    } else if (lastFilename == null) {
-      var filename;
-
-      if (/^:/.test(line)) { // it's a filename!
-        filename = line.slice(1);
-        map[filename] = [];
-      } else { // it's a line of only file
-        filename = options.args[0];
-        map[filename] = [getTodo(filename, line)];
-      }
-
+    } else if (lastFilename == null) { // it's a filename!
+      var filename = line.replace(':', '');
+      map[filename] = [];
       return filename;
     } else { // it's line!
-      map[lastFilename].push(getTodo(lastFilename, line));
+      map[lastFilename].push(getTodo(lastFilename, line, options));
       return lastFilename;
     }
   }, null);

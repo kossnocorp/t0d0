@@ -57,6 +57,10 @@ program
     '--edit [id]',
     'open Vim to edit TODO'
   )
+  .option(
+    '--ack',
+    'use ack instead of ag'
+  )
   .parse(process.argv);
 
 cli(program)
