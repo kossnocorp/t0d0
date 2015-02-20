@@ -195,17 +195,30 @@ describe('cli', function() {
   });
 
   context('with --blame option', function() {
-    it.skip('fetches line author from git', function(done) {
+    it('fetches line author from git', function(done) {
       var options = {
         test: true,
         blame: true,
-        args: []
+        args: [DIRNAME]
       };
 
       cli(options).then(function(result) {
         var author = result[FILENAME][0].author;
         expect(author).to.eql('Lesha Koss');
       }).then(done);
+    });
+  });
+
+  context('with --ack option', function() {
+    it('returns same result', function(done) {
+      var optionsAck = { test: true, args: [DIRNAME], ack: true };
+      var optionsNoAck = { test: true, args: [DIRNAME]};
+
+      cli(optionsNoAck).then(function(resultNoAck) {
+        cli(optionsAck).then(function(resultAck) {
+          expect(resultAck).to.eql(resultNoAck);
+        }).then(done);
+      });
     });
   });
 });

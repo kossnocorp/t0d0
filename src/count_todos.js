@@ -1,6 +1,6 @@
 var isReviewedRecentlyWithOptions = require('./is_reviewed_recently');
 
-var countTodos = function(fullMap, options) {
+var countTodos = function(fullMap, options, callback) {
   var today = new Date();
   var stats = {};
 
@@ -41,7 +41,7 @@ var countTodos = function(fullMap, options) {
     stats.files[filename] = fileStats;
   }
 
-  return stats;
+  callback(stats);
 };
 
 module.exports = countTodos;
