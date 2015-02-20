@@ -11,7 +11,7 @@ describe('countTodos', function() {
     this.clock.restore();
   });
 
-  it('counts reviewed and unreviewed todos', function() {
+  it('counts reviewed and unreviewed todos', function(done) {
     var map = {
       'file1': [
         {isReviewed: true, reviewedAt: new Date(2014, 11, 30)},
@@ -21,15 +21,19 @@ describe('countTodos', function() {
       'file2': [{isReviewed: true, reviewedAt: new Date(2014, 11, 30)}]
     };
 
-    expect(countTodos(map, {})).to.eql({
-      all: 4,
-      reviewed: 2,
-      reviewedObsolete: 1,
-      files: {
-        'file1': {all: 3, reviewed: 1, reviewedObsolete: 1},
-        'file2': {all: 1, reviewed: 1, reviewedObsolete: 0}
-      },
-      tags: {}
+    countTodos(map, {}, function(result) {
+      expect(result).to.eql({
+        all: 4,
+        reviewed: 2,
+        reviewedObsolete: 1,
+        files: {
+          'file1': {all: 3, reviewed: 1, reviewedObsolete: 1},
+          'file2': {all: 1, reviewed: 1, reviewedObsolete: 0}
+        },
+        tags: {}
+      });
+
+      done();
     });
   });
 });

@@ -9,7 +9,7 @@ var getTodo = function(filename, line, options) {
   var captures = line.replace('\0', '').match(captureToken);
   var lineNumber = parseInt(captures[1]);
   var column = parseInt(captures[2]);
-  var length = parseInt(captures[3]);
+  var length = parseInt(captures[3]) || 5;
   var source = captures[4];
 
   if (options.ack) {

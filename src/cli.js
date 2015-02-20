@@ -1,11 +1,12 @@
+var blameTodos = require('./blame_todos');
+var countTodos = require('./count_todos');
+var filterTodos = require('./filter_todos');
+var findTodoByID = require('./find_todo_by_id');
+var getMap = require('./get_map');
+var renderError = require('./render_error');
 var renderResult = require('./render_result');
 var renderStats = require('./render_stats');
 var runEditor = require('./run_editor');
-var getMap = require('./get_map');
-var filterTodos = require('./filter_todos');
-var countTodos = require('./count_todos');
-var findTodoByID = require('./find_todo_by_id');
-var blameTodos = require('./blame_todos');
 
 var Promise = require('bluebird');
 var trim = require('string-fns/src/trim');
@@ -40,15 +41,24 @@ var runCli = function(program, callback) {
         var fullMap = getMap(output, program);
 
         if (program.stats) {
-          var stats = countTodos(fullMap, program);
-          renderStats(stats, program, function(exitCode) {
-            callback(exitCode);
+          countTodos(fullMap, program, function(stats) {
+            renderStats(stats, program, function(exitCode) {
+              callback(exitCode);
+            });
           });
+
         } else if (program.edit) {
-          var todo = findTodoByID(fullMap, program.edit, program);
-          runEditor(todo, program, function(exitCode) {
-            callback(exitCode);
+          findTodoByID(fullMap, program.edit, program, function(err, todo) {
+            if (err) {
+              renderError(err);
+              callback(1);
+            } else {
+              runEditor(todo, program, function(exitCode) {
+                callback(exitCode);
+              });
+            }
           });
+
         } else {
           filterTodos(fullMap, program, function(map) {
             blameTodos(map, program, function(map) {

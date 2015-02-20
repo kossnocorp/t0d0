@@ -11,20 +11,40 @@ var map = {
 };
 
 describe('findTodoByID', function() {
-  it('finds by full ID', function() {
+  it('finds by full ID', function(done) {
     var id = '62cdb7020ff920e5aa642c3d4066950dd1f01f4d';
-    var result = findTodoByID(map, id);
-    expect(result).to.eql({id: id, source: 'bar'});
+    findTodoByID(map, id, {}, function(err, result) {
+      expect(err).to.be.null;
+      expect(result).to.eql({id: id, source: 'bar'});
+      done();
+    });
   });
 
-  it('finds by abbreviated ID', function() {
+  it('finds by abbreviated ID', function(done) {
     var id = 'b54ba7f5621240d403f06815f7246006ef8c7d43';
-    var result = findTodoByID(map, id.substring(0, 3));
-    expect(result).to.eql({id: id, source: 'qux'});
+    findTodoByID(map, id.substring(0, 3), {}, function(err, result) {
+      expect(err).to.be.null;
+      expect(result).to.eql({id: id, source: 'qux'});
+      done()
+    });
   });
 
-  it.skip('handles abbreviated ID collision', function() {
+  it('returns error when ID is not found', function(done) {
+    var id = '1234567890';
+    findTodoByID(map, id, {}, function(err, result) {
+      expect(err).to.be.an.instanceof(Error);
+      expect(result).to.be.undefined;
+      done();
+    });
+
+  });
+
+  it('returns error when there is abbreviated ID collision', function(done) {
     var id = 'bbe960a25ea311d21d40669e93df2003ba9b90a2';
-    var result = findTodoByID(map, id.substring(0, 1));
+    findTodoByID(map, id.substring(0, 1), {}, function(err, result) {
+      expect(err).to.be.an.instanceof(Error);
+      expect(result).to.be.undefined;
+      done();
+    });
   });
 });
