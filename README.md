@@ -1,7 +1,24 @@
 # t0d0 — The Only Certificated TODO-Driven-Development Tool<sup>*</sup>
 
+`t0d0` helps you to manage TODOs in your source code. 
+
+It allows you to:
+
+* Find and filter TODOs in your code base
+* See who was the author
+* When TODO was added
+* Mark TODOs with tags
+
 <img style="float: left" src="http://i.ncrp.co/image/3Q0g41022l2l/success.jpg">
 > "**Using TODO-Driven-Development we managed to successfully spend 10x more investor's money just in few months!**" - John Jarrett, CEO of "[The Most Successful Ltd.](http://themostsuccessfulcompany.com)<sup>**</sup>
+
+## Why I Should Use TODOs?
+
+`TODO` in a source code it's one of the most underestimated engineering tools. It might be really powerful,
+
+### Devide and Rule
+
+Everybody knows "Devide and Rule" principle, if you have big problem it's easier to devide it into small problems and solve it rather than try to address it at once. 
 
 ## Intallation
 
