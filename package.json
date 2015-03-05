@@ -10,11 +10,22 @@
   "bin": {
     "todo": "./bin/t0d0.js"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha \"src/**/__tests__/*.js\" --require \"src/__tests__/_test_helper\" --recursive --reporter spec --timeout 10000",
+    "autotest": "npm test -- --watch"
+  },
   "dependencies": {
+    "bluebird": "^2.9.9",
     "chalk": "^0.5.1",
     "commander": "^2.6.0",
-    "date-fns": "^0.14.8",
+    "date-fns": "git://github.com/js-fns/date-fns",
     "string-fns": "^0.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "chai-shallow-deep-equal": "^1.1.0",
+    "mocha": "^2.1.0",
+    "sinon": "^1.12.2",
+    "sinon-chai": "^2.7.0"
+  }
 }
